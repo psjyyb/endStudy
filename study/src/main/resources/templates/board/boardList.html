@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1>게시글 목록</h1>
+	<table class="table table-success table-striped">
+		<thead>
+			<tr>
+				<th>번호</th>
+				<th>제목</th>
+				<th>글쓴이</th>
+				<th>작성일</th>
+				<th>상세보기</th>
+			</tr>
+		</thead>
+		<tbody>
+			<th:block th:each=" board : ${boardList}">
+				<tr>
+					<!--/* <tr th:onclick="|location.href='@{empInfo(empid=${emp.empid},empname=${emp.empname}s)}'|"> */-->
+					<td th:text="${board.boardNo}"></td>
+					<td th:text="${board.boardTitle}"></td>
+					<td>[[ ${board.boardWriter} ]]</td>
+					<td>[[ ${#dates.format(board.regdate,'yyyy-MM-dd')} ]]</td>
+					<td><button
+							th:onclick="|location.href='@{/boardInfo(boardNo=${board.boardNo})}'|">상세보기</button></td>
+				</tr>
+			</th:block>
+		</tbody>
+	</table>
+</body>
+</html>
