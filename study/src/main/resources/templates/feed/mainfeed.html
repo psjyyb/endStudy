@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/sns/layouts/sns_layout}"
+	layout:fragment="snsContent">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+
+			<div class="col-lg-12 col-12">
+				<div class="section-title-wrap mb-5">
+					<h4 class="section-title">Related episodes</h4>
+				</div>
+			</div>
+
+			<div class="col-lg-4 col-12 mb-4 mb-lg-0" th:each=" feed : ${feedList}">
+				<div class="custom-block custom-block-full">
+					<div class="custom-block-image-wrap">
+						<a href="detail-page.html"> <img
+							src="images/podcast/27376480_7326766.jpg"
+							class="custom-block-image img-fluid" alt="">
+						</a>
+					</div>
+
+					<div class="custom-block-info">
+						<h5 class="mb-2">
+							<a href="detail-page.html"> [[ ${#dates.format(feed.feedWriteDate,'yyyy년MM월dd일')} ]] </a>
+						</h5>
+
+						<div class="profile-block d-flex">
+							<img
+								src="images/profile/woman-posing-black-dress-medium-shot.jpg"
+								class="profile-block-image img-fluid" alt="">
+
+							<p>
+								Elsa <strong>Influencer</strong>
+							</p>
+						</div>
+
+						<p class="mb-0">[[ ${feed.feedContent} ]]</p>
+						<p class="mb-0">[[ ${feed.feedHashtag} ]]</p>
+						<div
+							class="custom-block-bottom d-flex justify-content-between mt-3">
+							<a href="#" class="bi-headphones me-1"> <span>100k</span>
+							</a> <a href="#" class="bi-heart me-1"> <span>2.5k</span>
+							</a> <a href="#" class="bi-chat me-1"> <span>924k</span>
+							</a>
+						</div>
+					</div>
+
+					<div class="social-share d-flex flex-column ms-auto">
+						<a href="#" class="badge ms-auto"> <i class="bi-heart"></i>
+						</a> <a href="#" class="badge ms-auto"> <i class="bi-bookmark"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

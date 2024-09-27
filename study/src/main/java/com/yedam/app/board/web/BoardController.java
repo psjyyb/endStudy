@@ -25,7 +25,7 @@ public class BoardController {
 		this.boardService = boardService;
 	}
 
-	@GetMapping("/")
+	@GetMapping("/boardList")
 	public String boardList(Model model) {
 		List<BoardVO> boardList = boardService.boardList();
 		model.addAttribute("boardList",boardList);

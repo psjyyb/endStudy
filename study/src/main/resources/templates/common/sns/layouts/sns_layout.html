@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head th:replace="common/sns/configs/sns_config :: snsConfigFragment">
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<main>
+		<th:block
+			th:replace="common/sns/fragments/sns_header :: snsHeaderFragment"></th:block>
+
+
+		<section class="related-podcast-section section-padding">
+			<th:block layout:fragment="snsContent"></th:block>
+		</section>
+	</main>
+	<th:block
+		th:replace="common/sns/fragments/sns_footer :: snsFooterFragment"></th:block>
+
+</body>
+</html>
