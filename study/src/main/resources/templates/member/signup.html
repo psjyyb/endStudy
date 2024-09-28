@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/sns/layouts/sns_layout}"
+	layout:fragment="snsContent">
+<head>
+	<meta charset="UTF-8">
+	<title>회원가입</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+	<style>
+		#profileImagePreview {
+			width: 150px;
+			height: 150px;
+			border-radius: 50%;
+			object-fit: cover;
+			display: none; /* 이미지가 없으면 숨김 */
+		}
+	</style>
+</head>
+<body>
+	<div class="page-wrapper" id="main-wrapper" data-layout="vertical"
+		data-navbarbg="skin6" data-sidebartype="full"
+		data-sidebar-position="fixed" data-header-position="fixed">
+		<div class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
+			<div class="d-flex align-items-center justify-content-center w-100">
+				<div class="row justify-content-center w-100">
+					<div class="col-md-8 col-lg-6 col-xxl-3">
+						<div class="card mb-0">
+							<div class="card-body">
+								<a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-100">
+									<img src="../assets/images/logos/logo-light.svg" alt="">
+								</a>
+								<p class="text-center">회원가입</p>
+									<!-- 프로필 사진 업로드 -->
+									<div class="mb-3">
+										<label for="profileImage" class="form-label">프로필 사진</label>
+										<input type="file" class="form-control" id="profileImage" name="profileImage" accept="image/*">
+										<!-- 이미지 미리보기 -->
+										<div class="mt-3 text-center">
+											<img id="profileImagePreview" src="#" alt="프로필 사진 미리보기">
+										</div>
+									</div>
+									<div class="mb-3">
+										<label for="exampleInputtext1" class="form-label">아이디</label>
+										<div class="input-group">
+											<input type="text" class="form-control" id="memberId" name="memberId" aria-describedby="textHelp">
+											<button class="btn btn-outline-secondary" type="button" id="overlapBtn">중복확인</button>
+										</div>
+										<div id="idCheckMessage" class="mt-2"></div>
+									</div>
+
+									<div class="mb-4">
+										<label for="exampleInputPassword1" class="form-label">비밀번호</label>
+										<input type="password" class="form-control" id="memberPw" name="memberPw">
+									</div>
+									<div class="mb-3">
+										<label for="exampleInputPasswordConfirm" class="form-label">비밀번호 확인</label>
+										<input type="password" class="form-control" id="memberPwChk" name="memberPwChk" aria-describedby="passwordConfirmHelp">
+									</div>
+									<div class="mb-3">
+										<label for="exampleInputNickname" class="form-label">닉네임</label>
+										<input type="text" class="form-control" id="memberNickname" name="memberNickname" aria-describedby="nicknameHelp">
+									</div>
+									<div class="mb-3">
+										<label for="exampleInputPhone" class="form-label">휴대폰</label>
+										<input type="text" class="form-control" id="memberPhone" name="memberPhone" placeholder="010-0000-0000 형식으로 적어주세요.">
+									</div>
+									<button type="button" class="btn btn-primary w-100 py-8 fs-4 mb-4" id="signUpBtn">Sign Up</button>
+									<div class="d-flex align-items-center justify-content-center">
+										<p class="fs-4 mb-0 fw-bold">Already have an Account?</p>
+										<a class="text-primary fw-bold ms-2" th:href="@{/login}">Sign In</a>
+									</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script>
+		let overlapChk = false;
+		let dataFormat = new FormData();
+		$('#overlapBtn').on('click', function () {
+			let memberId = $('input[name="memberId"]');
+			if(memberId.val() == ''){
+				alert('아이디를 입력해주세요.');
+				memberId.focus();
+				return;
+			} else {
+				$.ajax({
+					url: '/overlapChk',
+					type: 'POST',
+					data: { memberId: memberId.val() },
+					success: function (result) {
+						let messageDiv = $('#idCheckMessage');
+						if (result.result === false) {
+							messageDiv.html('<span style="color: red;">아이디가 중복되었습니다.</span>');
+							overlapChk = false;
+						} else if (result.result === true) {
+							messageDiv.html('<span style="color: green;">사용 가능한 아이디입니다.</span>');
+							overlapChk = true;
+							dataFormat.append('memberId',memberId.val());
+						}
+					},
+					error: function (xhr, status, error) {
+						console.error('Error:', xhr, status, error);
+					}
+				});
+			}
+		});
+
+		$('#signUpBtn').on('click', function () {
+			if (!overlapChk) {
+				alert('아이디 중복체크를 해주세요.');
+				return;
+			} else {
+				if (dataSet()) {
+					$.ajax({
+						url:'/memberSignup',
+						type:'POST',
+						data:dataFormat,
+						processData:false,
+						contentType:false,
+						success:function(result){
+							if(result.result){
+								alert('등록완료!');
+								location.href= '/login';
+							}else{
+								alert('오류발생');
+							}
+							
+						},
+					fail:function(fails){
+						alert('오류발생');
+						console.log(fails);
+					}
+					})
+				}
+			}
+		});
+
+		let check = false;
+		function dataSet() {
+			let memberPw = $('input[name="memberPw"]');
+			if (memberPw.val() == '') {
+				alert('비밀번호를 입력해주세요.');
+				memberPw.focus();
+				return false;
+			}else{
+				dataFormat.append('memberPw',memberPw.val());
+			}
+			let memberPwChk = $('input[name="memberPwChk"]');
+			if (memberPwChk.val() == '') {
+				alert('비밀번호 확인을 입력해주세요.');
+				memberPwChk.focus();
+				return false;
+			}
+			if (memberPw.val() !== memberPwChk.val()) {
+				alert('비밀번호가 일치하지 않습니다.');
+				memberPwChk.focus();
+				return false;
+			}
+			let memberNickname = $('input[name="memberNickname"]');
+			if (memberNickname.val() == '') {
+				alert('닉네임을 입력해주세요.');
+				memberNickname.focus();
+				return false;
+			}else{
+				dataFormat.append('memberNickname',memberNickname.val());
+			}
+
+			let memberPhone = $('input[name="memberPhone"]');
+			let phonePattern = /^010-\d{4}-\d{4}$/; // 전화번호 형식 검사
+			if (memberPhone.val() == '') {
+				alert('휴대폰 번호를 입력해주세요.');
+				memberPhone.focus();
+				return false;
+			} else if (!phonePattern.test(memberPhone.val())) {
+				alert('휴대폰 번호 형식이 맞지 않습니다. 010-0000-0000 형식으로 입력해주세요.');
+				memberPhone.focus();
+				return false;
+			}else{
+				dataFormat.append('memberPhone',memberPhone.val());
+			}
+
+			return true;
+		}
+
+		// 프로필 사진 미리보기 기능
+		$('#profileImage').on('change', function () {
+			let file = this.files[0];
+			dataFormat.append('memberProfileImg',file);
+			if (file) {
+				let reader = new FileReader();
+				reader.onload = function (e) {
+					$('#profileImagePreview').attr('src', e.target.result);
+					$('#profileImagePreview').show(); // 미리보기 이미지 표시
+				}
+				reader.readAsDataURL(file);
+			} else {
+				$('#profileImagePreview').hide(); // 파일이 없으면 미리보기 숨김
+			}
+		});
+	</script>
+</body>
+</html>
