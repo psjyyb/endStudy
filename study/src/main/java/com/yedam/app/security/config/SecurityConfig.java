@@ -23,10 +23,23 @@ public class SecurityConfig {
 		http.csrf().disable();
 		http.headers().frameOptions().disable();
 
-		http.authorizeHttpRequests().antMatchers("/**", "/login", "/signUp", "/overlapChk").permitAll().and()
-				.formLogin().loginPage("/login") // 로그인 페이지 경로
+		http.authorizeHttpRequests().antMatchers("/**", "/login", "/signUp", "/overlapChk")
+				 .permitAll().anyRequest().authenticated().and()
+			.formLogin()
+				 .loginPage("/login")
+				 .loginProcessingUrl("/successLogin")
 				.defaultSuccessUrl("/") // 로그인 성공 시 이동할 페이지
-				.and().logout().permitAll(); // 로그아웃 허용
+				.failureUrl("/login?error=true")
+                .usernameParameter("username")
+                .passwordParameter("password")
+                .permitAll()
+                .and()
+             .logout()
+                .logoutUrl("/logout")
+        		.logoutSuccessUrl("/login?logout=true")
+        		.invalidateHttpSession(true) 
+        		.clearAuthentication(true)
+        		.permitAll();
 		return http.build();
 	}
 }
