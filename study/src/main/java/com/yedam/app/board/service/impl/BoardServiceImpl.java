@@ -28,13 +28,13 @@ public class BoardServiceImpl implements BoardService {
 		return boardMapper.infoBoard(boardVO);
 	}
 	@Override
-	public Map<String, Object> boardDelete(BoardVO boardVO) {
+	public boolean boardDelete(BoardVO boardVO) {
 		boolean isSuccess = false;
-		Map<String, Object> map = new HashMap<>();
+		
 		if(boardMapper.deleteBoard(boardVO)>0) {
 			isSuccess = true;
 		}
-		map.put("result", isSuccess);
-		return map;
+		
+		return isSuccess;
 	}
 }

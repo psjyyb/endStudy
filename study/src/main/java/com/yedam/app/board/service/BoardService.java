@@ -7,5 +7,5 @@ public interface BoardService {
 
 	List<BoardVO> boardList();
 	BoardVO boardInfo(BoardVO boardVO);
-	Map<String, Object> boardDelete(BoardVO boardVO);
+	boolean boardDelete(BoardVO boardVO);
 }

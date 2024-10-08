@@ -39,7 +39,7 @@ public class BoardController {
 	}
 	@PostMapping("/boardDelete")
 	@ResponseBody
-	public Map<String, Object> boardDelete(BoardVO boardVO) {
+	public boolean boardDelete(BoardVO boardVO) {
 		return boardService.boardDelete(boardVO);
 	}
 	@GetMapping("/boardInsert")

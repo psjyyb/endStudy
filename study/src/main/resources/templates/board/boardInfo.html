@@ -402,7 +402,7 @@ h5 {
 					alt="모듈 설명 이미지" style="width: 150px; height: 150px;"></td>
 			</tr>
 		</table>
-		<button th:onclick="|location.href='@{/}'|">목록으로</button>
+		<button th:onclick="|location.href='@{/boardList}'|">목록으로</button>
 		<button id="delBtn">삭제</button>
 	</div>
 	<script src="https://code.jquery.com/jquery-3.6.0.js"
@@ -417,8 +417,12 @@ h5 {
 					type:'POST',
 					data:{boardNo : boardNo},
 					success:function(result){
-						alert('삭제되었습니다.');
-						location.href='/';
+						if(result){
+							alert('삭제되었습니다.');
+						}else{
+							alert('오류발생');
+						}
+						location.href='/boardList';
 					},
 					error:function(){
 						alert('오류발생');
