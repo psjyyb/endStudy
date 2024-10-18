@@ -35,7 +35,7 @@ public class BoardController {
 	public String boardInfo(Model model, BoardVO boardVO) {
 		BoardVO boardInfo = boardService.boardInfo(boardVO);
 		model.addAttribute("boardInfo", boardInfo);
-		return "board/boardInfo";
+ 		return "board/boardInfo";
 	}
 	@PostMapping("/boardDelete")
 	@ResponseBody
